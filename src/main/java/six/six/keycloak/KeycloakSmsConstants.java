@@ -9,6 +9,7 @@ public class KeycloakSmsConstants {
     public static final String VERIFY_MOBILENUMBER_KEY = "VERIFY_MOBILENUMBER_KEY";
     public static final String ANSW_SMS_CODE = "smsCode";
 
+    public static final String CONF_PRP_SMS_ORIGINATOR = "sms-auth.originator";
     public static final String CONF_PRP_SMS_CODE_TTL = "sms-auth.code.ttl";
     public static final String CONF_PRP_SMS_CODE_LENGTH = "sms-auth.code.length";
     public static final String CONF_PRP_SMS_TEXT = "sms-auth.msg.text";

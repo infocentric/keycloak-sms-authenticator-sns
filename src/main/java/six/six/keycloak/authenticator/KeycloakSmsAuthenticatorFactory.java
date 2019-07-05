@@ -40,6 +40,14 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
     static {
         ProviderConfigProperty property;
 
+        // SMS Originator
+        property = new ProviderConfigProperty();
+        property.setName(KeycloakSmsConstants.CONF_PRP_SMS_ORIGINATOR);
+        property.setLabel("SMS originator");
+        property.setType(ProviderConfigProperty.STRING_TYPE);
+        property.setHelpText("Originator of the sent SMS. Only used in ASPSMS");
+        configProperties.add(property);
+
         // SMS Code
         property = new ProviderConfigProperty();
         property.setName(KeycloakSmsConstants.CONF_PRP_SMS_CODE_TTL);
@@ -63,7 +71,7 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
         property.setLabel("SMS gateway");
         property.setHelpText("Select SMS gateway");
         property.setType(ProviderConfigProperty.LIST_TYPE);
-        property.setDefaultValue(Gateways.AMAZON_SNS);
+        property.setDefaultValue(Gateways.ASPSMS);
         property.setOptions(Stream.of(Gateways.values())
                 .map(Enum::name)
                 .collect(Collectors.toList()));
@@ -74,7 +82,7 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
         property.setName(KeycloakSmsConstants.CONF_PRP_SMS_GATEWAY_ENDPOINT);
         property.setLabel("SMS endpoint");
         property.setType(ProviderConfigProperty.STRING_TYPE);
-        property.setHelpText("Only used for LyraSMS");
+        property.setHelpText("Only used for ASPSMS and LyraSMS");
         configProperties.add(property);
 
         // Credential
@@ -82,13 +90,13 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
         property.setName(KeycloakSmsConstants.CONF_PRP_SMS_CLIENTTOKEN);
         property.setLabel("Client id");
         property.setType(ProviderConfigProperty.STRING_TYPE);
-        property.setHelpText("AWS Client Token or LyraSMS User. Not used for GOV.UK Notify");
+        property.setHelpText("AWS Client Token, ASPSMS Userkey or LyraSMS User. Not used for GOV.UK Notify");
         configProperties.add(property);
 
         property = new ProviderConfigProperty();
         property.setName(KeycloakSmsConstants.CONF_PRP_SMS_CLIENTSECRET);
         property.setLabel("Client secret");
-        property.setHelpText("AWS Client Secret or LyraSMS Password. Not used for GOV.UK Notify");
+        property.setHelpText("AWS Client Secret, ASPSMS Password or LyraSMS Password. Not used for GOV.UK Notify");
         property.setType(ProviderConfigProperty.STRING_TYPE);
         configProperties.add(property);
 
@@ -97,10 +105,10 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
         property.setName(KeycloakSmsConstants.PROXY_ENABLED);
         property.setType(ProviderConfigProperty.BOOLEAN_TYPE);
         property.setLabel("Use Proxy");
-        property.setHelpText("Add Java Properties: http(s).proxyHost,http(s).proxyPort");
+        property.setHelpText("Add Java Properties: http(s).proxyHost,http(s).proxyPort. Not used for ASPSMS");
         configProperties.add(property);
 
-        //First time verification
+        // First time verification
         property = new ProviderConfigProperty();
         property.setName(KeycloakSmsConstants.MOBILE_VERIFICATION_ENABLED);
         property.setType(ProviderConfigProperty.BOOLEAN_TYPE);
@@ -108,15 +116,13 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
         property.setHelpText("Send SMS code ONLY to verify mobile number (add or update)");
         configProperties.add(property);
 
-        //Ask for mobile if not defined
+        // Ask for mobile if not defined
         property = new ProviderConfigProperty();
         property.setName(KeycloakSmsConstants.MOBILE_ASKFOR_ENABLED);
         property.setType(ProviderConfigProperty.BOOLEAN_TYPE);
         property.setLabel("Ask for mobile number");
         property.setHelpText("Enable access and ask for mobile number if it isn't defined");
         configProperties.add(property);
-
-
     }
 
     public String getId() {
