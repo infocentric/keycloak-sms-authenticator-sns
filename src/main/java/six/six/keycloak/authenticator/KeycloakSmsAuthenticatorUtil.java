@@ -14,6 +14,7 @@ import org.keycloak.theme.Theme;
 import org.keycloak.theme.ThemeProvider;
 import six.six.gateway.Gateways;
 import six.six.gateway.SMSService;
+import six.six.gateway.aspsms.ASPSMSService;
 import six.six.gateway.aws.snsclient.SnsNotificationService;
 import six.six.gateway.govuk.notify.NotifySMSService;
 import six.six.gateway.lyrasms.LyraSMSService;
@@ -180,6 +181,9 @@ public class KeycloakSmsAuthenticatorUtil {
         // GOV.UK Notify properties
         String notifyApiKey = System.getenv(KeycloakSmsConstants.NOTIFY_API_KEY);
         String notifyTemplate = System.getenv(KeycloakSmsConstants.NOTIFY_TEMPLATE_ID);
+        
+        // ASPSMS properties
+        String originator = EnvSubstitutor.envSubstitutor.replace(getConfigString(config, KeycloakSmsConstants.CONF_PRP_SMS_ORIGINATOR));
 
         // Create the SMS message body
         String template = getMessage(context, KeycloakSmsConstants.CONF_PRP_SMS_TEXT);
@@ -190,8 +194,11 @@ public class KeycloakSmsAuthenticatorUtil {
         try {
             Gateways g = Gateways.valueOf(gateway);
             switch(g) {
+                case ASPSMS:
+                    smsService = new ASPSMSService(endpoint, originator);
+                break;
                 case LYRA_SMS:
-                    smsService = new LyraSMSService(endpoint,isProxy);
+                    smsService = new LyraSMSService(endpoint, isProxy);
                     break;
                 case GOVUK_NOTIFY:
                     smsService = new NotifySMSService(notifyApiKey, notifyTemplate);
@@ -200,7 +207,7 @@ public class KeycloakSmsAuthenticatorUtil {
                     smsService = new SnsNotificationService();
             }
 
-            result=smsService.send(checkMobileNumber(setDefaultCountryCodeIfZero(mobileNumber, getMessage(context, KeycloakSmsConstants.MSG_MOBILE_PREFIX_DEFAULT), getMessage(context, KeycloakSmsConstants.MSG_MOBILE_PREFIX_CONDITION))), smsText, smsUsr, smsPwd);
+            result = smsService.send(checkMobileNumber(setDefaultCountryCodeIfZero(mobileNumber, getMessage(context, KeycloakSmsConstants.MSG_MOBILE_PREFIX_DEFAULT), getMessage(context, KeycloakSmsConstants.MSG_MOBILE_PREFIX_CONDITION))), smsText, smsUsr, smsPwd);
           return result;
        } catch(Exception e) {
             logger.error("Fail to send SMS " ,e );

@@ -27,7 +27,6 @@ Under Authentication > Flows:
 * Click on 'Actions > Add execution' on the 'Browser with SMS Forms' line and add the 'SMS Authentication'
 * Set 'SMS Authentication' to 'REQUIRED' or 'ALTERNATIVE'
 * To configure the SMS Authenticator, click 'Actions > Config' and fill in the relevant attributes
-  * When using **GOV.UK Notify**, the only attribute that needs changing is to select 'GOVUK_NOTIFY' as the SMS gateway.
 
 Under Authentication > Bindings:
 * Select 'Browser with SMS' as the 'Browser Flow' for the REALM.
@@ -40,15 +39,3 @@ Under Authentication > Required Actions:
 ## Styling
 
 The styling for the three Keycloak templates relies on using the 'govuk' theme, which can be found [here](https://github.com/UKGovernmentBEIS/keycloak-theme-govuk/?).
-
-## Contributions
-
-Malys contributions (for [Lyra Network](https://www.lyra-network.com/))
-* Internationalization support
-* Vault, Java properties, environment variables parameters support
-* Lyrasms gateway support
-* Add mobilephone number verification
-* Add input mobile phone number on authenticator
-* Refactoring
-* Template cleaning
-* Documentation
