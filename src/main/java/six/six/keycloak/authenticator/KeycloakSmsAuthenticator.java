@@ -187,17 +187,17 @@ public class KeycloakSmsAuthenticator implements Authenticator {
         String enteredCode = formData.getFirst(KeycloakSmsConstants.ANSW_SMS_CODE);
         KeycloakSession session = context.getSession();
 
-        List codeCreds = session.userCredentialManager().getStoredCredentialsByType(context.getRealm(), context.getUser(), KeycloakSmsConstants.USR_CRED_MDL_SMS_CODE);
-        /*List timeCreds = session.userCredentialManager().getStoredCredentialsByType(context.getRealm(), context.getUser(), KeycloakSmsAuthenticatorConstants.USR_CRED_MDL_SMS_EXP_TIME);*/
+        List<CredentialModel> codeCreds = session.userCredentialManager().getStoredCredentialsByType(context.getRealm(), context.getUser(), KeycloakSmsConstants.USR_CRED_MDL_SMS_CODE);
+        List<CredentialModel> timeCreds = session.userCredentialManager().getStoredCredentialsByType(context.getRealm(), context.getUser(), KeycloakSmsConstants.USR_CRED_MDL_SMS_EXP_TIME);
 
-        CredentialModel expectedCode = (CredentialModel) codeCreds.get(0);
-        /*CredentialModel expTimeString = (CredentialModel) timeCreds.get(0);*/
+        CredentialModel expectedCode = codeCreds.get(0);
+        CredentialModel expTimeString = timeCreds.get(0);
 
         logger.debug("Expected code = " + expectedCode + "    entered code = " + enteredCode);
 
         if (expectedCode != null) {
             result = enteredCode.equals(expectedCode.getValue()) ? CODE_STATUS.VALID : CODE_STATUS.INVALID;
-            /*long now = new Date().getTime();
+            long now = new Date().getTime();
 
             logger.debug("Valid code expires in " + (Long.parseLong(expTimeString.getValue()) - now) + " ms");
             if (result == CODE_STATUS.VALID) {
@@ -205,7 +205,7 @@ public class KeycloakSmsAuthenticator implements Authenticator {
                     logger.debug("Code is expired !!");
                     result = CODE_STATUS.EXPIRED;
                 }
-            }*/
+            }
         }
         logger.debug("result : " + result);
         return result;
