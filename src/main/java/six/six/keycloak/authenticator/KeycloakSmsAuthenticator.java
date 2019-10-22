@@ -174,7 +174,7 @@ public class KeycloakSmsAuthenticator implements Authenticator {
         context.getSession().userCredentialManager().updateCredential(context.getRealm(), context.getUser(), credentials);
 
         credentials.setType(KeycloakSmsConstants.USR_CRED_MDL_SMS_EXP_TIME);
-        credentials.setValue((expiringAt).toString());
+        credentials.setValue(expiringAt.toString());
         context.getSession().userCredentialManager().updateCredential(context.getRealm(), context.getUser(), credentials);
     }
 
